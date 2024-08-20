@@ -1,0 +1,112 @@
+openapi: '3.0.0'
+paths:
+  /api/auth/register:
+    post:
+      summary: Register a new user
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  required: true
+                  maxLength: 100
+                firstname:
+                  type: string
+                  required: true
+                  maxLength: 100
+                lastname:
+                  type: string
+                  required: true
+                  maxLength: 100
+                password:
+                  type: string
+                  required: true
+                  minLength: 6
+                  maxLength: 20
+                confirm_password:
+                  type: string
+                  required: true
+                  minLength: 6
+                  maxLength: 20
+      responses:
+        201:
+          description: User created
+  /api/auth/login:
+    post:
+      summary: Login a user
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  required: true
+                password:
+                  type: string
+                  required: true
+      responses:
+        200:
+          description: User logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  refresh_token:
+                    type: string
+  /api/auth/me:
+    get:
+      summary: Get user information
+      tags:
+        - Auth
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: User information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /api/auth/refresh-token:
+    post:
+      summary: Refresh access token
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+                  required: true
+      responses:
+        200:
+          description: Access token refreshed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  refresh_token:
+                    type: string
